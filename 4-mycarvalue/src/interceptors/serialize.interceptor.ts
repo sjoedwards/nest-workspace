@@ -32,6 +32,7 @@ export class SerializeInterceptor implements NestInterceptor {
         console.log("I'm running before the request is sent out", data);
         // plainToClass is going to turn an entity into a DTO - its not yet a string!
         return plainToInstance(this.dto, data, {
+          // The dto we pass can omit non-required options
           excludeExtraneousValues: true,
         });
       }),
