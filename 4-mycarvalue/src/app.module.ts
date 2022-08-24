@@ -16,29 +16,28 @@ const cookieSession = require('cookie-session');
 
 @Module({
   imports: [
-    UsersModule,
-    ReportsModule,
     // This is how you use values from other services when configuring the database
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env.${process.env.NODE_ENV}`,
+    }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
         return {
           type: 'sqlite',
           database: config.get<string>('DB_NAME'),
-          entities: [User, Report],
           synchronize: true,
+          entities: [User, Report],
         };
       },
     }),
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: `.env.${process.env.NODE_ENV}`,
-    }),
+    UsersModule,
+    ReportsModule,
   ],
-  controllers: [AppController, ReportsController],
+  controllers: [AppController],
   providers: [
     AppService,
-    ReportsService,
     {
       provide: APP_PIPE,
       useValue: new ValidationPipe({
