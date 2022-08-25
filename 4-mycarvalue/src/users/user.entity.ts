@@ -1,3 +1,4 @@
+import { Report } from 'src/reports/report.entity';
 import {
   AfterInsert,
   Entity,
@@ -5,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   AfterRemove,
   AfterUpdate,
+  OneToMany,
 } from 'typeorm';
 
 // By convention, you omit the 'Entity' suffix from the classname
@@ -18,6 +20,9 @@ export class User {
 
   @Column()
   password: string;
+
+  @OneToMany(() => Report, (report) => report.user)
+  reports: Report[];
 
   // Will run after insertion to the database
   @AfterInsert()

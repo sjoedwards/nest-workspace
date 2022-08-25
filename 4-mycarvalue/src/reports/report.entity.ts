@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/users/user.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Report {
@@ -25,4 +26,11 @@ export class Report {
 
   @Column()
   mileage: number;
+
+  // Report table will add a new column on the reports table - user_id
+  // Wrapped in a function because of CIRCULAR DEPENDENCIES between the relations
+  // Can't directly make reference to the relation
+  // Only at RUNTIME does the function get executed - at which point the circular dependency is gone
+  @ManyToOne(() => User, (user) => user.reports)
+  user: User;
 }
