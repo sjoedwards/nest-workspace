@@ -2,11 +2,15 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
   // Injects the repository from typeorm
-  constructor(@InjectRepository(User) private repo: Repository<User>) {}
+  constructor(
+    @InjectRepository(User) private repo: Repository<User>,
+    private configService: ConfigService,
+  ) {}
   create(email: string, password: string) {
     // Creates an instance in memory
     const user = this.repo.create({ email, password });
@@ -27,6 +31,7 @@ export class UsersService {
   }
 
   find(email: string) {
+    console.log(this.configService.get('DB_NAME'));
     return this.repo.findBy({ email });
   }
 

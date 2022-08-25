@@ -71,6 +71,7 @@ export class UsersController {
 
   @Get('/')
   findAllUsers(@Query('email') email: string) {
+    console.log('ping');
     return this.usersService.find(email);
   }
 

@@ -6,10 +6,17 @@ import { AuthService } from './auth.service';
 import { User } from './user.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   // This creates the repository for us - so we don't have to do it!
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env.${process.env.NODE_ENV}`,
+    }),
+  ],
   controllers: [UsersController],
   // Have to add CurrentUserInterceptor as a provider because it is an injectable
   providers: [
