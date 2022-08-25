@@ -21,7 +21,10 @@ export class User {
   @Column()
   password: string;
 
-  @OneToMany(() => Report, (report) => report.user)
+  @Column({ default: true })
+  admin: boolean;
+
+  @OneToMany(() => Report, (report) => report.user, { lazy: true })
   reports: Report[];
 
   // Will run after insertion to the database

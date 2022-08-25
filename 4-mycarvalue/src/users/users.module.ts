@@ -1,9 +1,8 @@
-import { Module } from '@nestjs/common';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CurrentUserMiddleware } from 'src/middleware/current-user.middleware';
 import { AuthService } from './auth.service';
-import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
 import { User } from './user.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
@@ -17,7 +16,11 @@ import { UsersService } from './users.service';
     UsersService,
     AuthService,
     // Globally scoped interceptor - bare in mind this will run for all routes!
-    { provide: APP_INTERCEPTOR, useClass: CurrentUserInterceptor },
   ],
 })
-export class UsersModule {}
+export class UsersModule {
+  // This is how you scope middleware to all controllersof a module - will run after those in app.module.ts
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CurrentUserMiddleware).forRoutes('*');
+  }
+}
