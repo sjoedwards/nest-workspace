@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CurrentUserMiddleware } from 'src/middleware/current-user.middleware';
+import { CurrentUserMiddleware } from '../middleware/current-user.middleware';
 import { AuthService } from './auth.service';
 import { User } from './user.entity';
 import { UsersController } from './users.controller';
