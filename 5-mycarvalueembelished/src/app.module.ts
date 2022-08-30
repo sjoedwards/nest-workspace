@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_PIPE } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import databaseConfig from '../database-config';
+import { AuthModule } from './auth/auth.module';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const cookieSession = require('cookie-session');
@@ -25,6 +26,7 @@ const cookieSession = require('cookie-session');
       },
     }),
     UsersModule,
+    AuthModule,
     ReportsModule,
   ],
   controllers: [AppController],
@@ -39,15 +41,4 @@ const cookieSession = require('cookie-session');
     },
   ],
 })
-export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    // run middleware
-    consumer
-      .apply(
-        cookieSession({
-          keys: ['testsession'],
-        }), // For all routes aka global middleware
-      )
-      .forRoutes('*');
-  }
-}
+export class AppModule {}

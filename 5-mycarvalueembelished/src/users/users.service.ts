@@ -35,6 +35,16 @@ export class UsersService {
     return this.repo.findBy({ email });
   }
 
+  async findById(id: number) {
+    const user = await this.repo.findOneBy({ id });
+
+    if (!user) {
+      throw new Error('user not found');
+    }
+
+    return user;
+  }
+
   async update(id: number, attrs: Partial<User>) {
     // Update is designed to be used with plain objects - so we want to use Save!
     // To call save we need to get an entity

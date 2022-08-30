@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
+import { Secret, decode, verify } from 'jsonwebtoken';
 
 describe('Authentication System', () => {
   let app: INestApplication;
@@ -19,15 +20,33 @@ describe('Authentication System', () => {
     await app.init();
   });
 
-  it('handles a signup request', () => {
-    return request(app.getHttpServer())
+  it('handles a signup request', async () => {
+    const response = await request(app.getHttpServer())
       .post('/auth/signup')
+      .send({ email: EMAIL, password: '1234' });
+
+    expect(response.status).toBe(201);
+    expect(response.body).toBeDefined();
+    expect(response.body.access_token).toBeDefined();
+    expect(
+      verify(response.body.access_token, process.env.JWT_SECRET).sub,
+    ).toBeDefined();
+  });
+
+  it('handles a signin request', async () => {
+    await request(app.getHttpServer())
+      .post('/auth/signup')
+      .send({ email: EMAIL, password: '1234' });
+    return request(app.getHttpServer())
+      .post('/auth/signin')
       .send({ email: EMAIL, password: '1234' })
       .expect(201)
-      .then((res) => {
-        const { id, email } = res.body;
-        expect(id).toBeDefined();
-        expect(email).toEqual(EMAIL);
+      .then((response) => {
+        expect(response.body).toBeDefined();
+        expect(response.body.access_token).toBeDefined();
+        expect(
+          verify(response.body.access_token, process.env.JWT_SECRET).sub,
+        ).toBeDefined();
       });
   });
 
@@ -39,13 +58,12 @@ describe('Authentication System', () => {
       .send({ email: EMAIL, password: '1234' });
 
     expect(response.status).toBe(201);
-    const cookie = response.get('Set-Cookie');
+    const accessToken = response.body.access_token;
 
     const { body } = await request(app.getHttpServer())
-      .get('/auth/whoami')
-      .set('Cookie', cookie)
+      .get('/users/whoami')
+      .set('Authorization', `Bearer ${accessToken}`)
       .expect(200);
-
     expect(body.email).toEqual(EMAIL);
   });
 });
