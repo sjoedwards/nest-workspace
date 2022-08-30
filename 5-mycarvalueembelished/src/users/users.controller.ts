@@ -12,6 +12,7 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
+import { IRequest } from 'types/request';
 import { JWTAuthGuard } from '../guards/jwt-auth.guard';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -19,10 +20,6 @@ import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
-
-interface IRequest extends Request {
-  user?: User;
-}
 
 @Controller('users')
 // Custom annotation applied to every route
@@ -53,19 +50,19 @@ export class UsersController {
     return user;
   }
 
-  // @Get('/')
-  // findAllUsers(@Query('email') email: string) {
-  //   console.log('ping');
-  //   return this.usersService.find(email);
-  // }
+  @Get('/')
+  findAllUsers(@Query('email') email: string) {
+    console.log('ping');
+    return this.usersService.find(email);
+  }
 
-  // @Delete('/:id')
-  // removeUser(@Param('id') id: string) {
-  //   return this.usersService.remove(parseInt(id));
-  // }
+  @Delete('/:id')
+  removeUser(@Param('id') id: string) {
+    return this.usersService.remove(parseInt(id));
+  }
 
-  // @Patch('/:id')
-  // updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
-  //   return this.usersService.update(parseInt(id), body);
-  // }
+  @Patch('/:id')
+  updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
+    return this.usersService.update(parseInt(id), body);
+  }
 }

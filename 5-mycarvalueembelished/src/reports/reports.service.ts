@@ -10,6 +10,14 @@ import { GetEstimateDto } from './dtos/get-estimate.dto';
 export class ReportsService {
   constructor(@InjectRepository(Report) private repo: Repository<Report>) {}
 
+  async getById(id: string): Promise<Report> {
+    const report = await this.repo.findOne({
+      where: { id: parseInt(id) },
+      relations: { user: true },
+    });
+    return report;
+  }
+
   create(reportDto: CreateReportDto, user: User) {
     const report = this.repo.create(reportDto);
     report.user = user;
