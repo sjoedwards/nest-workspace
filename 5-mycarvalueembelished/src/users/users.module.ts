@@ -7,6 +7,7 @@ import { UsersService } from './users.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { Role } from './role.entity';
 
 @Module({
   // This creates the repository for us - so we don't have to do it!

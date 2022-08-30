@@ -6,6 +6,8 @@ import { User } from 'src/users/user.entity';
 import { ReportDTO } from 'src/reports/dtos/report.dto';
 import { CreateReportDto } from 'src/reports/dtos/create-report.dto';
 import { UsersService } from '../src/users/users.service';
+import { RoleName } from 'types/enums';
+import { Role } from 'src/users/role.entity';
 
 describe('Authentication System', () => {
   let app: INestApplication;
@@ -106,29 +108,8 @@ describe('Authentication System', () => {
       .expect(200);
   });
 
-  it('authorises a report if the user is an admin ', async () => {
-    const reportPayload: CreateReportDto = {
-      make: 'toyota',
-      model: 'test',
-      year: 2040,
-      mileage: 10000,
-      lng: 0,
-      lat: 0,
-      price: 10000,
-    };
-    postReport(reportPayload);
-    const currentUser = await getCurrentUser();
-    await request(app.getHttpServer())
-      .patch(`/reports/${currentUser.id}`)
-      .send({ approved: true })
-      .set('Authorization', `Bearer ${accessToken}`)
-      .expect(200);
-  });
-
   it('denies report authoristaion if the user is not an admin ', async () => {
-    const usersService = app.get(UsersService);
     const currentUser = await getCurrentUser();
-    await usersService.update(currentUser.id, { admin: false });
 
     await request(app.getHttpServer())
       .patch(`/reports/${currentUser.id}`)

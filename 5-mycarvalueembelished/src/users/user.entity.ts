@@ -7,7 +7,10 @@ import {
   AfterRemove,
   AfterUpdate,
   OneToMany,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
+import { Role } from './role.entity';
 
 // By convention, you omit the 'Entity' suffix from the classname
 @Entity()
@@ -21,8 +24,8 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ default: true })
-  admin: boolean;
+  @ManyToMany(() => Role, (role) => role.users)
+  roles: Role[];
 
   @OneToMany(() => Report, (report) => report.user, { lazy: true })
   reports: Report[];

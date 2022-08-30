@@ -10,18 +10,17 @@ import {
   Request,
 } from '@nestjs/common';
 import { JWTAuthGuard } from '../guards/jwt-auth.guard';
-import { IRequest } from 'types/request';
-import { AdminGuard, RoleGuard } from '../guards/admin.guard';
+// import { IReques
+import { IRequest } from '../../types/request';
+import { RoleGuard } from '../guards/role.guard';
 import { Serialize } from '../interceptors/serialize.interceptor';
-// import { CurrentUser } from '../users/decorators/current-user.decorator';
-import { User } from '../users/user.entity';
 import { ApproveReportDto } from './dtos/approve-report.dto';
 import { CreateReportDto } from './dtos/create-report.dto';
 import { GetEstimateDto } from './dtos/get-estimate.dto';
 import { ReportDTO } from './dtos/report.dto';
 import { ReportsService } from './reports.service';
-import { Roles } from 'src/decorators/roles.decorator';
-import { Role } from 'types/enums';
+import { Roles } from '../decorators/roles.decorator';
+import { RoleName } from '../../types/enums';
 
 @Controller('reports')
 @UseGuards(JWTAuthGuard)
@@ -40,7 +39,7 @@ export class ReportsController {
   }
   // // Todo - RBAC from the authorization tutorial
   @Patch('/:id')
-  @Roles(Role.Admin)
+  @Roles(RoleName.Admin)
   @UseGuards(RoleGuard)
   approveReport(@Param('id') id: string, @Body() body: ApproveReportDto) {
     return this.reportsService.changeApproval(id, body.approved);
