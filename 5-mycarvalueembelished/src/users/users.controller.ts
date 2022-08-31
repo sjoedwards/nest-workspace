@@ -19,14 +19,14 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';
 import { User } from './user.entity';
-import { UsersService } from './users.service';
+import { UsersService, UsersServiceInterface } from './users.service';
 
 @Controller('users')
 // Custom annotation applied to every route
 @Serialize(UserDto)
 export class UsersController {
   // This is dependency injected in
-  constructor(private usersService: UsersService) {}
+  constructor(private usersService: UsersServiceInterface) {}
 
   @Get('/whoami')
   @UseGuards(JWTAuthGuard)

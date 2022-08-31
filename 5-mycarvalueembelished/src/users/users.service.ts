@@ -4,8 +4,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { ConfigService } from '@nestjs/config';
 
+export interface UsersServiceInterface {
+  create(email: string, password: string): Promise<User>;
+  findOne(id: number): Promise<User>;
+  findById(id: number): Promise<User>;
+  find(email: string): Promise<User[]>;
+  update(id: number, attrs: Partial<User>): Promise<User>;
+  remove(id: number): Promise<User>;
+}
 @Injectable()
-export class UsersService {
+export class UsersService implements UsersServiceInterface {
   // Injects the repository from typeorm
   constructor(
     @InjectRepository(User) private repo: Repository<User>,
